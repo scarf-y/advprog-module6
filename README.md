@@ -1,4 +1,7 @@
-## (1) Handle-Connection, Check Response
+
+## Commit 1 Reflection Notes
+
+### (1) Handle-Connection, Check Response
 
 The `handle_connection` function is responsible for processing incoming TCP streams and extracting HTTP request headers. It makes use of `BufReader` to improve efficiency by buffering input rather than reading from the stream line by line in real-time.
 
@@ -9,7 +12,9 @@ Once the headers are collected into a vector, they are printed to the console. T
 
 <br/>
 
-## (2) Returning HTML
+## Commit 2 Reflection Notes
+
+### (2) Returning HTML
 
 ![Commit 2 screen capture](/assets/images/commit2.png)
 
@@ -21,13 +26,24 @@ This modification demonstrates how Rust can handle basic HTTP responses efficien
 
 <br/>
 
-## (3) Validating Request and Selectively Responding
+## Commit 3 Reflection Notes
+
+### (3) Validating Request and Selectively Responding
 
 ![Commit 3 screen capture](/assets/images/commit3.png)
 
 With the updated implementation, the function can now return different HTML pages based on the request. If the request is for the root URL (`GET / HTTP/1.1`), it serves `hello.html`; otherwise, it responds with `404.html` and a `404 NOT FOUND` status. This allows the server to differentiate between valid and invalid requests.
 
 A key improvement in this update is the refactoring of redundant code. Previously, the `if` and `else` blocks contained repeated logic for reading files and writing responses. Now, these differences, status line and filename are assigned to variables first, allowing the rest of the response construction to be handled uniformly. This makes the code more concise, improves maintainability, and ensures that changes to file handling or response writing only need to be updated in one place. The use of tuple destructuring in `let (status_line, filename) = ...` also makes the logic clearer by separating decision-making from execution.
+
+
+<br/>
+
+## Commit 4 Reflection Notes
+
+### (4) Simulation of Slow Request
+
+A new addition is the ability to simulate a slow request using `thread::sleep(Duration::from_secs(5))`. When a request is made to `/sleep`, the server delays the response for 5 seconds before serving `hello.html`. To accommodate this new behavior, the implementation switched from `if` statements to a `match` expression, making it clearer how different request patterns are handled. Unlike `if`, `match` requires explicit referencing to compare string literals. This modification highlights the limitations of our simple server, as real-world web servers would handle concurrent requests more efficiently instead of blocking execution during delays.
 
 
 
