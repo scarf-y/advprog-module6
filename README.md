@@ -48,8 +48,14 @@ A new addition is the ability to simulate a slow request using `thread::sleep(Du
 
 <br/>
 
-## Commit 5 Reflection Notes
+## Commit 5 Reflection Notes  
 
-### (5) Multithreaded server using Threadpool
+### (5) Multithreaded server using ThreadPool  
 
-Now that we've introduced a `ThreadPool` to manage multiple threads, our server can handle multiple requests concurrently without blocking on a single slow request. The `ThreadPool::new(4)` ensures that at most four threads are spawned, preventing excessive resource usage. Each incoming connection is passed to the pool's `execute` method, which is designed to delegate the request to an available worker thread. Currently, `execute` is a placeholder and does not yet assign tasks to threads, but it lays the foundation for a structured approach to parallel request handling. Once fully implemented, this will significantly improve our server's ability to manage multiple clients efficiently.
+Now that we've introduced a `ThreadPool` to manage multiple threads, our server can handle multiple requests concurrently without blocking on a single slow request. The `ThreadPool::new(4)` ensures that at most four threads are spawned, preventing excessive resource usage. Each incoming connection is passed to the pool's `execute` method, which is designed to delegate the request to an available worker thread.  
+
+With the full implementation of `ThreadPool`, tasks are now properly assigned to worker threads. Each worker continuously listens for jobs in the queue and executes them as they arrive. Additionally, we’ve introduced **graceful shutdown behavior**:  
+- The `ThreadPool` takes ownership of the sender and drops it when shutting down, signaling workers to exit once their job queue is empty.  
+- Workers log their shutdown (`Worker {id} disconnected; shutting down.`), ensuring visibility into thread termination.  
+
+This completes the first working version of a concurrent request-handling system. Future improvements could involve better error handling, dynamic thread pool resizing, and request prioritization.
