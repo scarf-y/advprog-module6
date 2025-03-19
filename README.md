@@ -59,3 +59,17 @@ With the full implementation of `ThreadPool`, tasks are now properly assigned to
 - Workers log their shutdown (`Worker {id} disconnected; shutting down.`), ensuring visibility into thread termination.  
 
 This completes the first working version of a concurrent request-handling system. Future improvements could involve better error handling, dynamic thread pool resizing, and request prioritization.
+
+
+<br/>
+
+## Commit Bonus Reflection Notes
+
+### (Bonus) Function Improvement
+
+Previously, the `ThreadPool::new` function used an `assert!` to enforce a nonzero pool size, causing a panic if the value was invalid. We have now introduced `ThreadPool::build`, which replaces the panic with a safer error-handling approach. This function:  
+- Returns `Result<ThreadPool, PoolCreationError>`, preventing the program from crashing unexpectedly.  
+- Introduces a custom error type (`PoolCreationError`) that provides a clear message when thread pool creation fails.  
+- Maintains the same internal logic for creating worker threads and message queues while allowing more flexibility in handling initialization failures.  
+
+This change improves the robustness of our server, allowing us to handle incorrect configurations gracefully rather than forcefully terminating execution.
