@@ -19,4 +19,15 @@ With the updated implementation, the function now serves an actual HTML file as 
 This modification demonstrates how Rust can handle basic HTTP responses efficiently. By serving static files, the server is now more functional, laying the groundwork for more advanced features like handling different request methods, dynamic content generation, or even implementing a full web framework.
 
 
+<br/>
+
+## (3) Validating Request and Selectively Responding
+
+![Commit 3 screen capture](/assets/images/commit3.png)
+
+With the updated implementation, the function can now return different HTML pages based on the request. If the request is for the root URL (`GET / HTTP/1.1`), it serves `hello.html`; otherwise, it responds with `404.html` and a `404 NOT FOUND` status. This allows the server to differentiate between valid and invalid requests.
+
+A key improvement in this update is the refactoring of redundant code. Previously, the `if` and `else` blocks contained repeated logic for reading files and writing responses. Now, these differences, status line and filename are assigned to variables first, allowing the rest of the response construction to be handled uniformly. This makes the code more concise, improves maintainability, and ensures that changes to file handling or response writing only need to be updated in one place. The use of tuple destructuring in `let (status_line, filename) = ...` also makes the logic clearer by separating decision-making from execution.
+
+
 
