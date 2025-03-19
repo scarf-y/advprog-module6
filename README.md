@@ -46,4 +46,10 @@ A key improvement in this update is the refactoring of redundant code. Previousl
 A new addition is the ability to simulate a slow request using `thread::sleep(Duration::from_secs(5))`. When a request is made to `/sleep`, the server delays the response for 5 seconds before serving `hello.html`. To accommodate this new behavior, the implementation switched from `if` statements to a `match` expression, making it clearer how different request patterns are handled. Unlike `if`, `match` requires explicit referencing to compare string literals. This modification highlights the limitations of our simple server, as real-world web servers would handle concurrent requests more efficiently instead of blocking execution during delays.
 
 
+<br/>
 
+## Commit 5 Reflection Notes
+
+### (5) Multithreaded server using Threadpool
+
+Now that we've introduced a `ThreadPool` to manage multiple threads, our server can handle multiple requests concurrently without blocking on a single slow request. The `ThreadPool::new(4)` ensures that at most four threads are spawned, preventing excessive resource usage. Each incoming connection is passed to the pool's `execute` method, which is designed to delegate the request to an available worker thread. Currently, `execute` is a placeholder and does not yet assign tasks to threads, but it lays the foundation for a structured approach to parallel request handling. Once fully implemented, this will significantly improve our server's ability to manage multiple clients efficiently.
